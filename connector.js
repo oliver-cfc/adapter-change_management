@@ -25,7 +25,6 @@ class ServiceNowConnector {
     this.options = options;
   }
 
-
   /**
    * @callback iapCallback
    * @description A [callback function]{@link
@@ -39,7 +38,6 @@ class ServiceNowConnector {
    * @param {error} [errorMessage] - If an error is caught, return error
    *   message in optional second argument to callback function.
    */
-
 
    /**
    * @memberof ServiceNowConnector
@@ -59,7 +57,6 @@ class ServiceNowConnector {
        }
    return uri;
    }
-
 
   /**
    * @memberof ServiceNowConnector
@@ -82,7 +79,6 @@ class ServiceNowConnector {
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
   }
 
-
   /**
   * @memberof ServiceNowInstance
   * @method post
@@ -101,7 +97,6 @@ class ServiceNowConnector {
     postCallOptions.method = 'POST';
     this.sendRequest(postCallOptions, (results, error) => callback(results, error));
   }
-
 
   /**
   * @memberof ServiceNowInstance
@@ -141,7 +136,6 @@ class ServiceNowConnector {
     });
 }
 
-
 /**
  * @memberof ServiceNowConnector
  * @method isHibernating
@@ -157,7 +151,6 @@ class ServiceNowConnector {
     && response.body.includes('<html>')
     && response.statusCode === 200;
   }
-
 
  /**
  * @memberof ServiceNowConnector
