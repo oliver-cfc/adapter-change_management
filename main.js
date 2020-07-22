@@ -46,7 +46,7 @@ function mainOnObject() {
   });
 
   //  connector.post();
-  connector.post((data, error) => {
+  connector.post({}, (data, error) => {
     if (error) {
       console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
     }

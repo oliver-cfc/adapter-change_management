@@ -76,7 +76,7 @@ class ServiceNowConnector {
    * @param {error} callback.error - The error property of callback.
    */
   get(callback) {
-    let getCallOptions = this.options;
+    let getCallOptions = { ...this.options };
     getCallOptions.method = 'GET';
     getCallOptions.query = 'sysparm_limit=1';
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
@@ -97,8 +97,9 @@ class ServiceNowConnector {
   * @param {error} callback.error - The error property of callback.
   */
   post(callOptions, callback) {
-    callOptions.method = 'POST';
-    this.sendRequest(callOptions, (results, error) => callback(results, error));
+    let postCallOptions = { ...this.options };
+    postCallOptions.method = 'POST';
+    this.sendRequest(postCallOptions, (results, error) => callback(results, error));
   }
 
 
@@ -125,12 +126,7 @@ class ServiceNowConnector {
       uri = this.constructUri(callOptions.serviceNowTable, callOptions.query);
   else
       uri = this.constructUri(callOptions.serviceNowTable);
-  /**
-  * You must build the requestOptions object.
-  * This is not a simple copy/paste of the requestOptions object
-  * from the previous lab. There should be no
-  * hardcoded values.
-  */
+
   const requestOptions = {
       method: callOptions.method,
       auth: {
@@ -143,7 +139,7 @@ class ServiceNowConnector {
     request(requestOptions, (error, response, body) => {
         this.processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
     });
-  }
+}
 
 
 /**
