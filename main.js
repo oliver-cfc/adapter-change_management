@@ -89,23 +89,20 @@ function processRequestResults(error, response, body, callback) {
    * This function must not check for a hibernating instance;
    * it must call function isHibernating.
    */
-   const res = {
+   const retrievedResult = {
        data: null,
        error: null
    };
-
+   
    if (error) {
-       res.error = error;
+       retrievedResult.error = error;
+   } else if (isHibernating(response)) {
+       retrievedResult.error = 'Instance is hibernating';
+   } else {
+       retrievedResult.data = response;
    }
 
-   if (response && isHibernating(response)) {
-       res.error = "Instance is hibernating";
-   } else {
-       res.data = response;
-   }
-   //console.log(error)
-   //console.log(response)
-   //console.log(body)
+   return callback(retrievedResult.data, retrievedResult.error)
 }
 
 
@@ -146,6 +143,8 @@ function sendRequest(callOptions, callback) {
     baseUrl: options.url,
     uri: uri,
   };
+
+  // console.log(requestOptions.method, requestOptions.auth.user, requestOptions.auth.pass, requestOptions.uri)
 
   request(requestOptions, (error, response, body) => {
     processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
