@@ -192,13 +192,13 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     this.connector.get((data, error) => { 
+     this.connector.get((result, error) => { 
         if (error) {
              callback([], error);
         }
-        if (data) {
-            if (data.body) {
-                let result = JSON.parse(data.body);
+        if (result) {
+            if (result.body) {
+                let result = JSON.parse(result.body);
                 let tickets = [];
                 result.result.forEach((change) => {
                     let newChange = {
@@ -234,13 +234,13 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-     this.connector.post({}, (data, error) => {
+     this.connector.post({}, (result, error) => {
         if (error) {
-            callback(data, error);
+            callback(result, error);
         }
-        if (data) {
-            if (data.body) {
-                const result = JSON.parse(data.body);
+        if (result) {
+            if (result.body) {
+                const result = JSON.parse(result.body);
                 const ticket = result.result;
                 const newTicket = { change_ticket_number: ticket.number,
                     change_ticket_key: ticket.sys_id,
