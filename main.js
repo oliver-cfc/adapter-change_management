@@ -192,31 +192,8 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     this.connector.get((result, error) => { 
-        if (error) {
-             callback([], error);
-        }
-        if (result) {
-            if (result.body) {
-                let result = JSON.parse(result.body);
-                let tickets = [];
-                result.result.forEach((change) => {
-                    let newChange = {
-                        change_ticket_number: change.number,
-                        change_ticket_key: change.sys_id,
-                        active: change.active,
-                        priority: change.priority,
-                        description: change.description,
-                        work_start: change.work_start,
-                        work_end: change.work_end
-                    };
-                    tickets.push(newChange);
-                })
-                callback(tickets);
-            }
-        }
-     })
-}
+     this.connector.get(callback);
+  }
 
   /**
    * @memberof ServiceNowAdapter
@@ -234,30 +211,8 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-     this.connector.post({}, (result, error) => {
-        if (error) {
-            callback(result, error);
-        }
-        if (result) {
-            if (result.body) {
-                const result = JSON.parse(result.body);
-                const ticket = result.result;
-                const newTicket = { change_ticket_number: ticket.number,
-                    change_ticket_key: ticket.sys_id,
-                    active: ticket.active,
-                    priority: ticket.priority,
-                    description: ticket.description,
-                    work_start: ticket.work_start,
-                    work_end: ticket.work_end
-                };
-                callback(newTicket, error);
-            }
-        }
-     })
+     this.connector.post({}, callback)
   }
-
-
-
 }
 
 module.exports = ServiceNowAdapter;
