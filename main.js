@@ -192,7 +192,12 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     this.connector.get(callback);
+     this.connector.get((data, error) => {
+         if (error) {
+             callback([], error);
+         }
+
+    })
   }
 
   /**
