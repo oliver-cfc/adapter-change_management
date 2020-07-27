@@ -176,15 +176,7 @@ class ServiceNowAdapter extends EventEmitter {
     this.emit(status, { id: this.id });
   }
 
-  /**
-   * @memberof ServiceNowAdapter
-   * @method getRecord
-   * @summary Get ServiceNow Record
-   * @description Retrieves a record from ServiceNow.
-   *
-   * @param {ServiceNowAdapter~requestCallback} callback - The callback that
-   *   handles the response.
-   */
+  
   getRecord(callback) {
     /**
      * Write the body for this function.
@@ -192,12 +184,32 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     this.connector.get((data, error) => {
+     this.connector.get((data, error) => { 
          if (error) {
+             console.error(`\nGET error:\n${JSON.stringify(error)}`);
              callback([], error);
          }
-
-    })
+         if (data) {
+             if (data.body) {
+                 let result = JSON.parse(data.body);
+                 let tickets = [];
+                 console.debug(`\nGET request:\n${JSON.stringify(data.body)}`);
+                 result.result.forEach((change) => {
+                     let newChange = {
+                         change_ticket_number: change.number,
+                         change_ticket_key: change.sys_id,
+                         active: change.active,
+                         priority: change.priority,
+                         description: change.description,
+                         work_start: change.work_start,
+                         work_end: change.work_end
+                     };
+                     tickets.push(newChange);
+                 })
+                 callback(tickets);
+             }
+         }
+     })
   }
 
   /**
@@ -216,8 +228,31 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-     this.connector.post({}, callback)
+     this.connector.post({}, (data, error) => {
+         if (error) {
+             console.error(`\nPOST request:\n${JSON.stringify(error)}`);
+             callback(data, error);
+         }
+         if (data) {
+             if (data.body) {
+                 console.debug(`\nPOST request:\n${JSON.stringify(data.body
+                 )}`);
+                 const result = JSON.parse(data.body);
+                 const ticket = result.result;
+                 const newTicket = { change_ticket_number: ticket.number,
+                    change_ticket_key: ticket.sys_id,
+                    active: ticket.active,
+                    priority: ticket.priority,
+                    description: ticket.description,
+                    work_start: ticket.work_start,
+                    work_end: ticket.work_end
+                 };
+                 callback(newTicket, error);
+             }
+         }
+     })
   }
+
 }
 
 module.exports = ServiceNowAdapter;
